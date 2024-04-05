@@ -129,7 +129,7 @@
             }).then(function() {
                 return gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: '16WFUSnwrOsUBCzMx7k2hiFmHIanuBGDJM1NZdIVQdIo',
-                    range: 'Sheet1!A2:D100', // Измените диапазон данных по вашему усмотрению
+                    range: 'Sheet1!J1:M500', // Измените диапазон данных по вашему усмотрению
                 });
             }).then(function(response) {
                 var data = response.result.values;
