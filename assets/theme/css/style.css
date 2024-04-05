@@ -1,6 +1,6 @@
 @charset "UTF-8";
 section {
-  background-color: #f0f0f0;
+  background-color: #ffffff;
 }
 
 body {
@@ -409,7 +409,7 @@ nav .mbr-section-btn {
   position: fixed;
   text-align: right;
   z-index: 5000;
-  color: #f0f0f0;
+  color: #ffffff;
   font-size: 22px;
 }
 
@@ -794,7 +794,7 @@ body {
 }
 
 .form-control {
-  background-color: #f0f0f0;
+  background-color: #ffffff;
   background-clip: border-box;
   color: #232323;
   line-height: 1rem !important;
