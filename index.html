@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="generator" content="Mobirise v5.9.13, mobirise.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <link rel="shortcut icon" href="assets/images/masterpiece-a-tree-cartoon-emo.jpeg" type="image/x-icon">
+    <meta name="description" content="">
+
+
+    <title>Main</title>
+    <link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap&display=swap">
+    </noscript>
+    <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=6pVCcF">
+    <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=6pVCcF" type="text/css">
+
+
+
+
+</head>
+
+<body>
+
+    <section data-bs-version="5.1" class="news09 startm5 cid-u93LT22uvJ" id="news09-0">
+
+        <div class="container">
+            <div class="col-12 mb-5 content-head">
+                <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+                    <strong>Що нового?</strong></h3>
+
+            </div>
+            <section class="features-without-image cid-sH30u6f8yY" id="features16-2t">
+                <div id="workshopContainer">
+                    <!-- Здесь будут отображаться данные -->
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <script>
+        const token = 'patPBSPPbZP0OPzZj.7fefac237f2324576cd0adf82a7aee77bd2a46fe8b635d1339085ffc8ac9922c';
+        const baseUrl = 'https://api.airtable.com/v0/app1bE49Ct2WxxcmK/tblW1YsuX8c2ZPiGe';
+
+        function loadData() {
+            fetch(baseUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Data from Airtable:', data); // Проверяем данные в консоли
+
+                    const workshopContainer = document.getElementById('workshopContainer');
+
+                    data.records.forEach(record => {
+                        const name = record.fields.name;
+                        const date = record.fields.date;
+                        const money = record.fields.money;
+                        const notes = record.fields.notes;
+
+                        const workshopElement = document.createElement('div');
+                        workshopElement.classList.add('item', 'features-without-image', 'col-12', 'active');
+                        workshopElement.innerHTML = `
+                            <div class="item-wrapper">
+                                <h5 class="mbr-card-title mbr-fonts-style mt-0 mb-3 display-5"><strong>${name}</strong></h5>
+                                <div class="details">
+                                    <div class="details-item display-7">
+                                        <span class="mbr-iconfont mobi-mbri-calendar mobi-mbri details-icon"></span>
+                                        <p class="mbr-tag mbr-fonts-style display-7">${date}<br></p>
+                                    </div>
+                                </div>
+                                <div class="details">
+                                    <div class="details-item display-7">
+                                        <span class="mbr-iconfont details-icon mobi-mbri-cash mobi-mbri"></span>
+                                        <p class="mbr-tag mbr-fonts-style display-7">${money}<br></p>
+                                    </div>
+                                </div>
+                                <h6 class="mbr-card-subtitle mbr-fonts-style mt-0 mb-3 display-7">${name}</h6>
+                            </div>
+                        `;
+
+                        // Добавляем стили к созданным элементам
+                        workshopElement.style.backgroundColor = 'rgba(240,240,240,255)';
+                        workshopElement.style.padding = '20px';
+
+                        workshopContainer.appendChild(workshopElement);
+                    });
+
+                })
+                .catch(error => {
+                    console.error('Проблеми з данными:', error);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/smoothscroll/smooth-scroll.js"></script>
+    <script src="assets/ytplayer/index.js"></script>
+    <script src="assets/theme/js/script.js"></script>
+
+
+
+</body>
+
+</html>
