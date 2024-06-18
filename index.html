@@ -60,13 +60,13 @@
         }
 
         document.getElementById('start-btn').addEventListener('click', () => {
-            tg.sendData('/start');
+            tg.sendData(JSON.stringify({ command: '/start' }));
         });
 
         document.getElementById('share-btn').addEventListener('click', () => {
             const username = tg.initDataUnsafe.user.username || 'N/A';
             const firstName = tg.initDataUnsafe.user.first_name || 'N/A';
-            tg.sendData(`Имя: ${firstName}, Юзернейм: ${username}`);
+            tg.sendData(JSON.stringify({ command: 'share', name: firstName, username: username }));
         });
     </script>
 </body>
