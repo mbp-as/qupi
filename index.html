@@ -18,6 +18,14 @@
         .profile img {
             border-radius: 50%;
         }
+        .buttons {
+            margin-top: 20px;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -28,6 +36,11 @@
         <p><strong>Username:</strong> <span id="username"></span></p>
         <p><strong>First Name:</strong> <span id="first-name"></span></p>
         <p><strong>Last Name:</strong> <span id="last-name"></span></p>
+    </div>
+
+    <div class="buttons">
+        <button id="start-btn">Старт</button>
+        <button id="share-btn">Поделиться данными</button>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -45,6 +58,16 @@
         } else {
             document.getElementById('user-photo').style.display = 'none';
         }
+
+        document.getElementById('start-btn').addEventListener('click', () => {
+            tg.sendData('/start');
+        });
+
+        document.getElementById('share-btn').addEventListener('click', () => {
+            const username = tg.initDataUnsafe.user.username || 'N/A';
+            const firstName = tg.initDataUnsafe.user.first_name || 'N/A';
+            tg.sendData(`Имя: ${firstName}, Юзернейм: ${username}`);
+        });
     </script>
 </body>
 </html>
