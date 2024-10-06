@@ -32,6 +32,16 @@
             padding: 10px;
             font-size: 1rem;
         }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin-top: 10px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
         .slider-container {
             display: flex;
             flex-direction: column;
@@ -77,6 +87,10 @@
         <label for="numLinesSlider" class="slider-label">Number of Lines: <span id="numLinesValue" class="value-display">1000</span></label>
         <input type="range" id="numLinesSlider" min="100" max="3000" value="1000">
     </div>
+
+    <button id="generateBtn">Generate</button>
+    <button id="addLineBtn">Add Line</button>
+    <button id="resetBtn">Reset</button>
 </div>
 
 <canvas id="canvas" width="500" height="500"></canvas>
@@ -87,6 +101,10 @@
     let numPoints = 200;  // Количество точек на окружности (значение по умолчанию)
     let numLines = 1000;  // Количество линий (значение по умолчанию)
     let points = [];
+    let currentLine = 0;
+    let currentPoint = 0;
+    let imageData = null;
+    let isGenerating = false;  // Флаг для контроля процесса генерации
 
     // Обновление значений слайдеров
     document.getElementById('numPointsSlider').addEventListener('input', function () {
@@ -108,40 +126,40 @@
         }));
     }
 
-    // Функция для рисования нитей
-    function drawStringArt(imageData, points, numLines) {
-        let currentPoint = Math.floor(Math.random() * points.length);
-        for (let i = 0; i < numLines; i++) {
-            let maxIntensity = -Infinity;
-            let nextPoint = currentPoint;
+    // Постепенное рисование нитей
+    function drawStringArtStep() {
+        if (currentLine >= numLines || !isGenerating) return;
 
-            points.forEach((p, index) => {
-                if (index !== currentPoint) {
-                    const intensity = getLineIntensity(imageData, points[currentPoint], points[index]);
-                    if (intensity > maxIntensity) {
-                        maxIntensity = intensity;
-                        nextPoint = index;
-                    }
+        let maxIntensity = -Infinity;
+        let nextPoint = currentPoint;
+
+        points.forEach((p, index) => {
+            if (index !== currentPoint) {
+                const intensity = getLineIntensity(imageData, points[currentPoint], points[index], 10); // Ограничиваем шаги
+                if (intensity > maxIntensity) {
+                    maxIntensity = intensity;
+                    nextPoint = index;
                 }
-            });
+            }
+        });
 
-            // Рисуем линию между текущей и следующей точкой
-            ctx.beginPath();
-            ctx.moveTo(points[currentPoint].x, points[currentPoint].y);
-            ctx.lineTo(points[nextPoint].x, points[nextPoint].y);
-            ctx.strokeStyle = 'black';
-            ctx.stroke();
+        // Рисуем линию между текущей и следующей точкой
+        ctx.beginPath();
+        ctx.moveTo(points[currentPoint].x, points[currentPoint].y);
+        ctx.lineTo(points[nextPoint].x, points[nextPoint].y);
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
 
-            currentPoint = nextPoint;
-        }
+        currentPoint = nextPoint;
+        currentLine++;
     }
 
-    // Получение средней интенсивности вдоль линии
-    function getLineIntensity(imageData, point1, point2) {
+    // Получение средней интенсивности вдоль линии с ограничением шагов
+    function getLineIntensity(imageData, point1, point2, maxSteps = 100) {
         let sum = 0;
         const dx = point2.x - point1.x;
         const dy = point2.y - point1.y;
-        const steps = Math.max(Math.abs(dx), Math.abs(dy));
+        const steps = Math.min(maxSteps, Math.max(Math.abs(dx), Math.abs(dy)));  // Ограничиваем количество шагов
         for (let i = 0; i <= steps; i++) {
             const t = i / steps;
             const x = Math.floor(point1.x + dx * t);
@@ -176,7 +194,7 @@
             ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
 
             // Преобразуем изображение в черно-белое
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             for (let i = 0; i < imageData.data.length; i += 4) {
                 const avg = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3;
                 imageData.data[i] = imageData.data[i + 1] = imageData.data[i + 2] = avg;  // Устанавливаем яркость
@@ -186,9 +204,32 @@
             // Генерируем точки на окружности
             points = generatePoints(canvas.width / 2, canvas.height / 2, canvas.width / 2 - 20, numPoints);
 
-            // Рисуем нити
-            drawStringArt(imageData, points, numLines);
+            // Сбрасываем текущие параметры
+            currentLine = 0;
+            currentPoint = Math.floor(Math.random() * points.length);
         };
+    });
+
+    // Генерация линий по нажатию кнопки "Генерировать"
+    document.getElementById('generateBtn').addEventListener('click', function () {
+        isGenerating = true;
+        drawStringArtStep();
+    });
+
+    // Добавление одной линии по нажатию кнопки "Еще линия"
+    document.getElementById('addLineBtn').addEventListener('click', function () {
+        if (!isGenerating) {
+            isGenerating = true;
+            drawStringArtStep();
+            isGenerating = false; // Снова останавливаем после одной линии
+        }
+    });
+
+    // Сброс по нажатию кнопки "Заново"
+    document.getElementById('resetBtn').addEventListener('click', function () {
+        isGenerating = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);  // Очищаем холст
+        currentLine = 0;
     });
 </script>
 
